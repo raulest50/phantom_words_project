@@ -3,6 +3,97 @@ from dash import html, dcc, Input, Output, State, callback, ctx, ClientsideFunct
 import dash_bootstrap_components as dbc
 import base64
 import json
+import numpy as np
+import plotly.graph_objs as go
+
+# Función para calcular la escala de Bark
+def bark_scale(f):
+    """
+    Calcula el valor en la escala de Bark para una frecuencia dada en Hz.
+
+    Parámetros:
+    f (float o array): Frecuencia en Hz
+
+    Retorna:
+    float o array: Valor correspondiente en la escala de Bark
+    """
+    return 13 * np.arctan(0.00076 * f) + 3.5 * np.arctan((f/7500)**2)
+
+# Función para generar la gráfica de la escala de Bark
+def generate_bark_scale_figure():
+    """
+    Genera una figura de Plotly que muestra la relación entre frecuencia (Hz) y la escala de Bark.
+
+    Retorna:
+    plotly.graph_objs.Figure: Figura con la gráfica de la escala de Bark
+    """
+    # Generar un rango de frecuencias de 20 Hz a 20 kHz (rango audible humano)
+    frequencies = np.logspace(np.log10(20), np.log10(20000), 1000)
+
+    # Calcular los valores correspondientes en la escala de Bark
+    bark_values = bark_scale(frequencies)
+
+    # Crear la figura
+    fig = go.Figure()
+
+    # Añadir la línea de la escala de Bark
+    fig.add_trace(go.Scatter(
+        x=frequencies,
+        y=bark_values,
+        mode='lines',
+        name='Escala de Bark',
+        line=dict(color='blue', width=2)
+    ))
+
+    # Definir las frecuencias límite de las bandas críticas de Bark
+    band_boundaries = [
+        0, 100, 200, 300, 400, 510, 630, 770, 920, 1080, 1270, 1480, 
+        1720, 2000, 2320, 2700, 3150, 3700, 4400, 5300, 6400, 7700, 9500, 12000, 15500
+    ]
+
+    # Calcular los valores de Bark correspondientes a las frecuencias límite
+    band_bark_values = bark_scale(np.array(band_boundaries))
+
+    # Añadir puntos rojos para las bandas críticas
+    fig.add_trace(go.Scatter(
+        x=band_boundaries,
+        y=band_bark_values,
+        mode='markers',
+        name='Bandas Críticas',
+        marker=dict(
+            color='red',
+            size=8,
+            symbol='circle'
+        )
+    ))
+
+    # Configurar el diseño de la gráfica
+    fig.update_layout(
+        title='Relación entre Frecuencia y Escala de Bark',
+        xaxis=dict(
+            title='Frecuencia (Hz)',
+            type='log',
+            tickformat='.0f',
+            gridcolor='lightgray'
+        ),
+        yaxis=dict(
+            title='Escala de Bark (z)',
+            gridcolor='lightgray'
+        ),
+        plot_bgcolor='white',
+        margin=dict(l=40, r=40, t=50, b=40),
+        height=500,
+        width=700,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+
+    return fig
 
 # Inicializar la aplicación Dash con el tema Bootstrap
 app = dash.Dash(
@@ -235,7 +326,8 @@ app.layout = html.Div([
                 html.P([
                     "La escala de Bark es una escala psicoacústica que representa cómo los humanos perciben las frecuencias de sonido. ",
                     "Está dividida en bandas críticas (o 'barks') que corresponden a cómo nuestro sistema auditivo procesa diferentes rangos de frecuencia. ",
-                    "Esta escala es relevante para el efecto de palabras fantasma porque ayuda a entender cómo nuestro cerebro interpreta y fusiona sonidos."
+                    "Esta escala es relevante para el efecto de palabras fantasma porque ayuda a entender cómo nuestro cerebro interpreta y fusiona sonidos, ",
+                    "especialmente cuando se presentan estímulos auditivos repetitivos y superpuestos como en este experimento."
                 ]),
             ], width=12),
         ], className="mb-3"),
@@ -244,15 +336,63 @@ app.layout = html.Div([
         dbc.Row([
             dbc.Col([
                 html.Div([
-                    html.Img(
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Bark_scale.svg/800px-Bark_scale.svg.png",
-                        alt="Escala de Bark",
-                        style={"width": "100%", "maxWidth": "600px", "margin": "0 auto", "display": "block"}
+                    dcc.Graph(
+                        id='bark-scale-graph',
+                        figure=generate_bark_scale_figure(),
+                        config={'displayModeBar': False}
                     ),
                     html.Figcaption(
-                        "Figura: Representación de la escala de Bark que muestra la relación no lineal entre la frecuencia (Hz) y la percepción auditiva (Bark).",
+                        "Figura: Representación de la escala de Bark que muestra la relación no lineal entre la frecuencia (Hz) y la percepción auditiva (Bark). Generada con la ecuación: z(f) = 13 * arctan(0.00076 * f) + 3.5 * arctan((f/7500)²)",
                         style={"textAlign": "center", "marginTop": "10px", "fontStyle": "italic"}
                     )
+                ]),
+            ], width=12),
+        ]),
+
+        # Tabla de bandas críticas de Bark
+        dbc.Row([
+            dbc.Col([
+                html.H5("Bandas Críticas de la Escala de Bark", className="mb-3"),
+                html.P("La siguiente tabla muestra todas las bandas críticas de la escala de Bark y sus rangos de frecuencia correspondientes:"),
+                dbc.Table([
+                    html.Thead(
+                        html.Tr([
+                            html.Th("Banda Bark"),
+                            html.Th("Rango de Frecuencia (Hz)"),
+                            html.Th("Ancho de Banda (Hz)"),
+                            html.Th("Frecuencia Central (Hz)")
+                        ])
+                    ),
+                    html.Tbody([
+                        html.Tr([html.Td("1"), html.Td("0 - 100"), html.Td("100"), html.Td("50")]),
+                        html.Tr([html.Td("2"), html.Td("100 - 200"), html.Td("100"), html.Td("150")]),
+                        html.Tr([html.Td("3"), html.Td("200 - 300"), html.Td("100"), html.Td("250")]),
+                        html.Tr([html.Td("4"), html.Td("300 - 400"), html.Td("100"), html.Td("350")]),
+                        html.Tr([html.Td("5"), html.Td("400 - 510"), html.Td("110"), html.Td("450")]),
+                        html.Tr([html.Td("6"), html.Td("510 - 630"), html.Td("120"), html.Td("570")]),
+                        html.Tr([html.Td("7"), html.Td("630 - 770"), html.Td("140"), html.Td("700")]),
+                        html.Tr([html.Td("8"), html.Td("770 - 920"), html.Td("150"), html.Td("840")]),
+                        html.Tr([html.Td("9"), html.Td("920 - 1080"), html.Td("160"), html.Td("1000")]),
+                        html.Tr([html.Td("10"), html.Td("1080 - 1270"), html.Td("190"), html.Td("1170")]),
+                        html.Tr([html.Td("11"), html.Td("1270 - 1480"), html.Td("210"), html.Td("1370")]),
+                        html.Tr([html.Td("12"), html.Td("1480 - 1720"), html.Td("240"), html.Td("1600")]),
+                        html.Tr([html.Td("13"), html.Td("1720 - 2000"), html.Td("280"), html.Td("1850")]),
+                        html.Tr([html.Td("14"), html.Td("2000 - 2320"), html.Td("320"), html.Td("2150")]),
+                        html.Tr([html.Td("15"), html.Td("2320 - 2700"), html.Td("380"), html.Td("2500")]),
+                        html.Tr([html.Td("16"), html.Td("2700 - 3150"), html.Td("450"), html.Td("2900")]),
+                        html.Tr([html.Td("17"), html.Td("3150 - 3700"), html.Td("550"), html.Td("3400")]),
+                        html.Tr([html.Td("18"), html.Td("3700 - 4400"), html.Td("700"), html.Td("4000")]),
+                        html.Tr([html.Td("19"), html.Td("4400 - 5300"), html.Td("900"), html.Td("4800")]),
+                        html.Tr([html.Td("20"), html.Td("5300 - 6400"), html.Td("1100"), html.Td("5800")]),
+                        html.Tr([html.Td("21"), html.Td("6400 - 7700"), html.Td("1300"), html.Td("7000")]),
+                        html.Tr([html.Td("22"), html.Td("7700 - 9500"), html.Td("1800"), html.Td("8500")]),
+                        html.Tr([html.Td("23"), html.Td("9500 - 12000"), html.Td("2500"), html.Td("10500")]),
+                        html.Tr([html.Td("24"), html.Td("12000 - 15500"), html.Td("3500"), html.Td("13500")])
+                    ])
+                ], bordered=True, hover=True, responsive=True, striped=True, className="mb-3"),
+                html.P([
+                    "En el efecto de palabras fantasma, los sonidos que caen dentro de la misma banda crítica tienden a ser procesados juntos por el cerebro, ",
+                    "lo que puede contribuir a la percepción de palabras o frases que no están realmente presentes en el estímulo auditivo original."
                 ]),
             ], width=12),
         ], className="mb-4"),
