@@ -30,7 +30,7 @@ function stopAudioPlayback() {
 
     isPlaying = false;
 
-    return "Audio playback stopped.";
+    return "Reproducción de audio detenida.";
 }
 
 // Function to process audio with delay effect
@@ -44,17 +44,17 @@ function processAudioWithDelay(n_clicks, delayStr, loopsStr, audioData1Str, audi
 
     if (!n_clicks) {
         console.log('Returning early: n_clicks is falsy');
-        return "Ready to play audio.";
+        return "Listo para reproducir audio.";
     }
 
     // Check if we have the necessary data to play audio
     if (!delayStr || !loopsStr || !audioData1Str || !trackMode || !speed1Str) {
         console.log('Returning early: missing required parameters');
-        return "Error: Missing required parameters. Please ensure all settings are configured.";
+        return "Error: Faltan parámetros requeridos. Por favor asegúrese de que todas las configuraciones estén completas.";
     }
     if (trackMode === 'dual' && (!audioData2Str || !speed2Str)) {
         console.log('Returning early: dual track mode but missing track 2 data');
-        return "Error: Dual track mode selected but Track 2 is missing. Please upload a second audio file.";
+        return "Error: Modo de pistas duales seleccionado pero falta la Pista 2. Por favor suba un segundo archivo de audio.";
     }
 
     // Stop any currently playing audio
@@ -157,7 +157,7 @@ function processAudioWithDelay(n_clicks, delayStr, loopsStr, audioData1Str, audi
             .catch(error => {
                 console.error('Error processing audio:', error);
                 isPlaying = false;
-                return "Error processing audio. Please check your audio file and try again.";
+                return "Error al procesar el audio. Por favor verifique su archivo de audio e intente nuevamente.";
             });
     } else {
         // Dual track mode
@@ -259,13 +259,13 @@ function processAudioWithDelay(n_clicks, delayStr, loopsStr, audioData1Str, audi
         .catch(error => {
             console.error('Error processing audio:', error);
             isPlaying = false;
-            return "Error processing audio. Please check your audio files and try again.";
+            return "Error al procesar el audio. Por favor verifique sus archivos de audio e intente nuevamente.";
         });
     }
 
     return trackMode === 'single' 
-        ? "Playing single track with phantom words effect..." 
-        : "Playing dual tracks with phantom words effect...";
+        ? "Reproduciendo pista única con efecto de palabras fantasma..." 
+        : "Reproduciendo pistas duales con efecto de palabras fantasma...";
 }
 
 

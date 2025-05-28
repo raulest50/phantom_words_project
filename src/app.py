@@ -15,7 +15,7 @@ app = dash.Dash(
 # Use default Dash index string (CSS is now in assets/custom_styles.css)
 
 # Set the title of the app
-app.title = "Phantom Words Dashboard"
+app.title = "Panel de Palabras Fantasma"
 
 # Define the header style with light blue background
 header_style = {
@@ -30,8 +30,8 @@ header_style = {
 app.layout = html.Div([
     # Header section
     html.Div([
-        html.H1("Phantom Words Dashboard", className="display-4"),
-        html.P("A demonstration of the Phantom Words effect", className="lead"),
+        html.H1("Panel de Palabras Fantasma", className="display-4"),
+        html.P("Una demostración del efecto de Palabras Fantasma", className="lead"),
     ], style=header_style),
 
     # Main content container
@@ -39,20 +39,20 @@ app.layout = html.Div([
         # Audio upload section
         dbc.Row([
             dbc.Col([
-                html.H3("Upload Audio Files", className="mb-3"),
-                html.P("Select audio files to experience the Phantom Words effect. The files must be audio files and less than 5MB each."),
+                html.H3("Subir Archivos de Audio", className="mb-3"),
+                html.P("Seleccione archivos de audio para experimentar el efecto de Palabras Fantasma. Los archivos deben ser archivos de audio y menos de 5MB cada uno."),
             ], width=12),
         ], className="mb-2"),
 
         # Track mode selector
         dbc.Row([
             dbc.Col([
-                html.Label("Select Track Mode:"),
+                html.Label("Seleccionar Modo de Pista:"),
                 dcc.Dropdown(
                     id='track-mode-selector',
                     options=[
-                        {'label': 'Single Track', 'value': 'single'},
-                        {'label': 'Dual Tracks', 'value': 'dual'}
+                        {'label': 'Pista Única', 'value': 'single'},
+                        {'label': 'Pistas Duales', 'value': 'dual'}
                     ],
                     value='dual',
                     clearable=False,
@@ -63,12 +63,12 @@ app.layout = html.Div([
 
         dbc.Row([
             dbc.Col([
-                html.H5("Track 1", className="mb-2"),
+                html.H5("Pista 1", className="mb-2"),
                 dcc.Upload(
                     id='upload-audio-1',
                     children=html.Div([
-                        'Drag and Drop or ',
-                        html.A('Select Audio Track 1')
+                        'Arrastrar y Soltar o ',
+                        html.A('Seleccionar Pista de Audio 1')
                     ]),
                     style={
                         'width': '100%',
@@ -90,12 +90,12 @@ app.layout = html.Div([
                 html.Div(
                     id='track-2-container',
                     children=[
-                        html.H5("Track 2", className="mb-2"),
+                        html.H5("Pista 2", className="mb-2"),
                         dcc.Upload(
                             id='upload-audio-2',
                             children=html.Div([
-                                'Drag and Drop or ',
-                                html.A('Select Audio Track 2')
+                                'Arrastrar y Soltar o ',
+                                html.A('Seleccionar Pista de Audio 2')
                             ]),
                             style={
                                 'width': '100%',
@@ -119,8 +119,8 @@ app.layout = html.Div([
         # Controls section
         dbc.Row([
             dbc.Col([
-                html.H4("Delay Control", className="mb-3"),
-                html.P("Adjust the delay between left and right audio channels:"),
+                html.H4("Control de Retraso", className="mb-3"),
+                html.P("Ajuste el retraso entre los canales de audio izquierdo y derecho:"),
                 dcc.Slider(
                     id='delay-slider',
                     min=0,
@@ -134,10 +134,10 @@ app.layout = html.Div([
             ], md=6),
 
             dbc.Col([
-                html.H4("Loop Control", className="mb-3"),
-                html.P("Set the number of times to repeat the audio:"),
+                html.H4("Control de Repetición", className="mb-3"),
+                html.P("Establezca el número de veces para repetir el audio:"),
                 dbc.InputGroup([
-                    dbc.InputGroupText("Loops:"),
+                    dbc.InputGroupText("Repeticiones:"),
                     dbc.Input(
                         id="loop-count",
                         type="number",
@@ -153,8 +153,8 @@ app.layout = html.Div([
         # Speed control sliders
         dbc.Row([
             dbc.Col([
-                html.H4("Speed Control - Track 1", className="mb-3"),
-                html.P("Adjust the playback speed of Track 1:"),
+                html.H4("Control de Velocidad - Pista 1", className="mb-3"),
+                html.P("Ajuste la velocidad de reproducción de la Pista 1:"),
                 dcc.Slider(
                     id='speed-slider-1',
                     min=0.5,
@@ -171,8 +171,8 @@ app.layout = html.Div([
                 html.Div(
                     id='speed-control-2-container',
                     children=[
-                        html.H4("Speed Control - Track 2", className="mb-3"),
-                        html.P("Adjust the playback speed of Track 2:"),
+                        html.H4("Control de Velocidad - Pista 2", className="mb-3"),
+                        html.P("Ajuste la velocidad de reproducción de la Pista 2:"),
                         dcc.Slider(
                             id='speed-slider-2',
                             min=0.5,
@@ -191,8 +191,8 @@ app.layout = html.Div([
         # Play button for phantom words effect
         dbc.Row([
             dbc.Col([
-                html.H4("Play Phantom Words Effect", className="mb-3"),
-                html.P("Click the buttons below to play or stop the audio with the phantom words effect:"),
+                html.H4("Reproducir Efecto de Palabras Fantasma", className="mb-3"),
+                html.P("Haga clic en los botones a continuación para reproducir o detener el audio con el efecto de palabras fantasma:"),
             ], width=12),
         ], className="mb-2"),
 
@@ -200,7 +200,7 @@ app.layout = html.Div([
         dbc.Row([
             dbc.Col([
                 dbc.Button(
-                    "Play Audio",
+                    "Reproducir Audio",
                     id="play-button",
                     color="primary",
                     className="w-100",
@@ -213,7 +213,7 @@ app.layout = html.Div([
 
             dbc.Col([
                 dbc.Button(
-                    "Stop Audio",
+                    "Detener Audio",
                     id="stop-button",
                     color="danger",
                     className="w-100",
@@ -237,7 +237,7 @@ app.layout = html.Div([
 
     # Footer
     html.Footer([
-        html.P("Phantom Words Project - 2025", className="text-center text-muted"),
+        html.P("Proyecto de Palabras Fantasma - 2025", className="text-center text-muted"),
     ], style={"padding": "2rem 0", "marginTop": "2rem", "borderTop": "1px solid #e7e7e7"}),
 ])
 
@@ -255,7 +255,7 @@ def update_output_track1(contents, filename):
 
     # Check file extension
     if not filename.lower().endswith(('.mp3', '.wav', '.ogg', '.m4a')):
-        return "Error: Please upload an audio file (MP3, WAV, OGG, M4A).", None, None
+        return "Error: Por favor suba un archivo de audio (MP3, WAV, OGG, M4A).", None, None
 
     # Decode the file content
     content_type, content_string = contents.split(',')
@@ -263,7 +263,7 @@ def update_output_track1(contents, filename):
 
     # Check file size (5MB limit)
     if len(decoded) > 5 * 1024 * 1024:  # 5MB in bytes
-        return "Error: File size exceeds 5MB limit.", None, None
+        return "Error: El tamaño del archivo excede el límite de 5MB.", None, None
 
     # Store the audio data
     audio_data = {
@@ -273,7 +273,7 @@ def update_output_track1(contents, filename):
 
     # Create audio player component
     audio_player = html.Div([
-        html.H6(f"Selected file: {filename}", className="mt-2"),
+        html.H6(f"Archivo seleccionado: {filename}", className="mt-2"),
         html.Audio(
             id='audio-player-1',
             src=contents,
@@ -298,7 +298,7 @@ def update_output_track2(contents, filename):
 
     # Check file extension
     if not filename.lower().endswith(('.mp3', '.wav', '.ogg', '.m4a')):
-        return "Error: Please upload an audio file (MP3, WAV, OGG, M4A).", None, None
+        return "Error: Por favor suba un archivo de audio (MP3, WAV, OGG, M4A).", None, None
 
     # Decode the file content
     content_type, content_string = contents.split(',')
@@ -306,7 +306,7 @@ def update_output_track2(contents, filename):
 
     # Check file size (5MB limit)
     if len(decoded) > 5 * 1024 * 1024:  # 5MB in bytes
-        return "Error: File size exceeds 5MB limit.", None, None
+        return "Error: El tamaño del archivo excede el límite de 5MB.", None, None
 
     # Store the audio data
     audio_data = {
@@ -316,7 +316,7 @@ def update_output_track2(contents, filename):
 
     # Create audio player component
     audio_player = html.Div([
-        html.H6(f"Selected file: {filename}", className="mt-2"),
+        html.H6(f"Archivo seleccionado: {filename}", className="mt-2"),
         html.Audio(
             id='audio-player-2',
             src=contents,
@@ -346,21 +346,21 @@ def toggle_track2_visibility(track_mode):
     [Input('delay-slider', 'value')]
 )
 def update_delay_display(value):
-    return f"Current delay: {value} ms"
+    return f"Retraso actual: {value} ms"
 
 @callback(
     Output('speed-value-display-1', 'children'),
     [Input('speed-slider-1', 'value')]
 )
 def update_speed1_display(value):
-    return f"Current speed: {value}x"
+    return f"Velocidad actual: {value}x"
 
 @callback(
     Output('speed-value-display-2', 'children'),
     [Input('speed-slider-2', 'value')]
 )
 def update_speed2_display(value):
-    return f"Current speed: {value}x"
+    return f"Velocidad actual: {value}x"
 
 # Register clientside callbacks for audio playback
 app.clientside_callback(
