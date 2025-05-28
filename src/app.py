@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import base64
 import json
 
-# Initialize the Dash app with Bootstrap theme
+# Inicializar la aplicación Dash con el tema Bootstrap
 app = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
@@ -12,31 +12,31 @@ app = dash.Dash(
     suppress_callback_exceptions=True,
 )
 
-# Use default Dash index string (CSS is now in assets/custom_styles.css)
+# Usar la cadena de índice predeterminada de Dash (CSS ahora está en assets/custom_styles.css)
 
-# Set the title of the app
+# Establecer el título de la aplicación
 app.title = "Panel de Palabras Fantasma"
 
-# Define the header style with light blue background
+# Definir el estilo del encabezado con fondo azul claro
 header_style = {
-    "backgroundColor": "#ADD8E6",  # Light blue color
+    "backgroundColor": "#ADD8E6",  # Color azul claro
     "padding": "2rem 1rem",
     "textAlign": "center",
     "boxShadow": "0 4px 6px rgba(0, 0, 0, 0.1)",
     "marginBottom": "2rem",
 }
 
-# Define the layout of the app
+# Definir el diseño de la aplicación
 app.layout = html.Div([
-    # Header section
+    # Sección de encabezado
     html.Div([
         html.H1("Panel de Palabras Fantasma", className="display-4"),
         html.P("Una demostración del efecto de Palabras Fantasma", className="lead"),
     ], style=header_style),
 
-    # Main content container
+    # Contenedor principal de contenido
     dbc.Container([
-        # Audio upload section
+        # Sección de carga de audio
         dbc.Row([
             dbc.Col([
                 html.H3("Subir Archivos de Audio", className="mb-3"),
@@ -44,7 +44,7 @@ app.layout = html.Div([
             ], width=12),
         ], className="mb-2"),
 
-        # Track mode selector
+        # Selector de modo de pista
         dbc.Row([
             dbc.Col([
                 html.Label("Seleccionar Modo de Pista:"),
@@ -116,7 +116,7 @@ app.layout = html.Div([
             ], md=6),
         ], className="mb-4"),
 
-        # Controls section
+        # Sección de controles
         dbc.Row([
             dbc.Col([
                 html.H4("Control de Retraso", className="mb-3"),
@@ -150,7 +150,7 @@ app.layout = html.Div([
             ], md=6),
         ], className="mb-4"),
 
-        # Speed control sliders
+        # Controles deslizantes de velocidad
         dbc.Row([
             dbc.Col([
                 html.H4("Control de Velocidad - Pista 1", className="mb-3"),
@@ -188,7 +188,7 @@ app.layout = html.Div([
             ], md=6),
         ], className="mb-4"),
 
-        # Play button for phantom words effect
+        # Botón de reproducción para el efecto de palabras fantasma
         dbc.Row([
             dbc.Col([
                 html.H4("Reproducir Efecto de Palabras Fantasma", className="mb-3"),
@@ -196,7 +196,7 @@ app.layout = html.Div([
             ], width=12),
         ], className="mb-2"),
 
-        # Buttons row with gap
+        # Fila de botones con espacio
         dbc.Row([
             dbc.Col([
                 dbc.Button(
@@ -208,7 +208,7 @@ app.layout = html.Div([
                 ),
             ], width=5),
 
-            # Empty column for spacing
+            # Columna vacía para espaciado
             dbc.Col(width=2),
 
             dbc.Col([
@@ -228,20 +228,48 @@ app.layout = html.Div([
             ], width=12),
         ], className="mb-4"),
 
+        # Sección de ejemplo de la escala de Bark
+        dbc.Row([
+            dbc.Col([
+                html.H4("Ejemplo de Escala de Bark", className="mb-3"),
+                html.P([
+                    "La escala de Bark es una escala psicoacústica que representa cómo los humanos perciben las frecuencias de sonido. ",
+                    "Está dividida en bandas críticas (o 'barks') que corresponden a cómo nuestro sistema auditivo procesa diferentes rangos de frecuencia. ",
+                    "Esta escala es relevante para el efecto de palabras fantasma porque ayuda a entender cómo nuestro cerebro interpreta y fusiona sonidos."
+                ]),
+            ], width=12),
+        ], className="mb-3"),
 
-        # Hidden divs for storing the audio data
+        # Visualización de la escala de Bark
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Img(
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Bark_scale.svg/800px-Bark_scale.svg.png",
+                        alt="Escala de Bark",
+                        style={"width": "100%", "maxWidth": "600px", "margin": "0 auto", "display": "block"}
+                    ),
+                    html.Figcaption(
+                        "Figura: Representación de la escala de Bark que muestra la relación no lineal entre la frecuencia (Hz) y la percepción auditiva (Bark).",
+                        style={"textAlign": "center", "marginTop": "10px", "fontStyle": "italic"}
+                    )
+                ]),
+            ], width=12),
+        ], className="mb-4"),
+
+        # Divs ocultos para almacenar los datos de audio
         html.Div(id='audio-storage-1', style={'display': 'none'}),
         html.Div(id='audio-storage-2', style={'display': 'none'}),
 
     ]),
 
-    # Footer
+    # Pie de página
     html.Footer([
         html.P("Proyecto de Palabras Fantasma - 2025", className="text-center text-muted"),
     ], style={"padding": "2rem 0", "marginTop": "2rem", "borderTop": "1px solid #e7e7e7"}),
 ])
 
-# Callback to validate uploaded file and store audio data for Track 1
+# Callback para validar el archivo cargado y almacenar datos de audio para la Pista 1
 @callback(
     [Output('upload-error-1', 'children'),
      Output('audio-output-1', 'children'),
@@ -253,25 +281,25 @@ def update_output_track1(contents, filename):
     if contents is None:
         return None, None, None
 
-    # Check file extension
+    # Verificar la extensión del archivo
     if not filename.lower().endswith(('.mp3', '.wav', '.ogg', '.m4a')):
         return "Error: Por favor suba un archivo de audio (MP3, WAV, OGG, M4A).", None, None
 
-    # Decode the file content
+    # Decodificar el contenido del archivo
     content_type, content_string = contents.split(',')
     decoded = base64.b64decode(content_string)
 
-    # Check file size (5MB limit)
-    if len(decoded) > 5 * 1024 * 1024:  # 5MB in bytes
-        return "Error: El tamaño del archivo excede el límite de 5MB.", None, None
+    # Verificar el tamaño del archivo (límite de 30MB)
+    if len(decoded) > 30 * 1024 * 1024:  # 5MB en bytes
+        return "Error: El tamaño del archivo excede el límite de 30MB.", None, None
 
-    # Store the audio data
+    # Almacenar los datos de audio
     audio_data = {
         'content': contents,
         'filename': filename
     }
 
-    # Create audio player component
+    # Crear componente de reproductor de audio
     audio_player = html.Div([
         html.H6(f"Archivo seleccionado: {filename}", className="mt-2"),
         html.Audio(
@@ -284,7 +312,7 @@ def update_output_track1(contents, filename):
 
     return None, audio_player, json.dumps(audio_data)
 
-# Callback to validate uploaded file and store audio data for Track 2
+# Callback para validar el archivo cargado y almacenar datos de audio para la Pista 2
 @callback(
     [Output('upload-error-2', 'children'),
      Output('audio-output-2', 'children'),
@@ -296,25 +324,25 @@ def update_output_track2(contents, filename):
     if contents is None:
         return None, None, None
 
-    # Check file extension
+    # Verificar la extensión del archivo
     if not filename.lower().endswith(('.mp3', '.wav', '.ogg', '.m4a')):
         return "Error: Por favor suba un archivo de audio (MP3, WAV, OGG, M4A).", None, None
 
-    # Decode the file content
+    # Decodificar el contenido del archivo
     content_type, content_string = contents.split(',')
     decoded = base64.b64decode(content_string)
 
-    # Check file size (5MB limit)
-    if len(decoded) > 5 * 1024 * 1024:  # 5MB in bytes
+    # Verificar el tamaño del archivo (límite de 5MB)
+    if len(decoded) > 5 * 1024 * 1024:  # 5MB en bytes
         return "Error: El tamaño del archivo excede el límite de 5MB.", None, None
 
-    # Store the audio data
+    # Almacenar los datos de audio
     audio_data = {
         'content': contents,
         'filename': filename
     }
 
-    # Create audio player component
+    # Crear componente de reproductor de audio
     audio_player = html.Div([
         html.H6(f"Archivo seleccionado: {filename}", className="mt-2"),
         html.Audio(
@@ -327,7 +355,7 @@ def update_output_track2(contents, filename):
 
     return None, audio_player, json.dumps(audio_data)
 
-# Callbacks to show/hide track 2 and speed slider 2 based on track mode
+# Callbacks para mostrar/ocultar la pista 2 y el control deslizante de velocidad 2 según el modo de pista
 @callback(
     [Output('track-2-container', 'style'),
      Output('speed-control-2-container', 'style')],
@@ -340,7 +368,7 @@ def toggle_track2_visibility(track_mode):
         return {'display': 'block'}, {'display': 'block'}
 
 
-# Callbacks to update the value displays for sliders
+# Callbacks para actualizar las visualizaciones de valores para los controles deslizantes
 @callback(
     Output('delay-value-display', 'children'),
     [Input('delay-slider', 'value')]
@@ -362,7 +390,7 @@ def update_speed1_display(value):
 def update_speed2_display(value):
     return f"Velocidad actual: {value}x"
 
-# Register clientside callbacks for audio playback
+# Registrar callbacks del lado del cliente para la reproducción de audio
 app.clientside_callback(
     ClientsideFunction(
         namespace='audio_processor',
@@ -389,6 +417,6 @@ app.clientside_callback(
     prevent_initial_call=True
 )
 
-# Run the app
+# Ejecutar la aplicación
 if __name__ == "__main__":
     app.run_server(debug=True)
