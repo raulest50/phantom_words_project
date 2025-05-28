@@ -1,0 +1,1 @@
+# Para contextualizarte del proyecto lee el pdf Phantom words 1.pdf
